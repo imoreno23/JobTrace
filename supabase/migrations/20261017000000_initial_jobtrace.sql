@@ -125,8 +125,7 @@ values ('project-photos', 'project-photos', false, 12582912, array['image/jpeg',
 on conflict (id) do update set public = false, file_size_limit = 12582912,
   allowed_mime_types = array['image/jpeg','image/png','image/webp'];
 
--- Keep the ownership lookup in a helper so the Storage policy can reference
--- the outer storage.objects.name without colliding with projects.name or businesses.name.
+-- Keep the ownership lookup in a restricted helper so the Storage policy stays simple.
 create or replace function public.can_access_project_photo(object_path text)
 returns boolean
 language sql
@@ -146,24 +145,7 @@ $function$;
 revoke all on function public.can_access_project_photo(text) from public, anon, authenticated;
 grant execute on function public.can_access_project_photo(text) to authenticated;
 
-create policy "Owners can view their project photo files" on storage.objects
-  for select to authenticated using (
-    bucket_id = 'project-photos' and public.can_access_project_photo(name)
-  );
-
-create policy "Owners can upload their project photo files" on storage.objects
-  for insert to authenticated with check (
-    bucket_id = 'project-photos' and public.can_access_project_photo(name)
-  );
-
-create policy "Owners can update their project photo files" on storage.objects
-  for update to authenticated using (
-    bucket_id = 'project-photos' and public.can_access_project_photo(name)
-  ) with check (
-    bucket_id = 'project-photos' and public.can_access_project_photo(name)
-  );
-
-create policy "Owners can delete their project photo files" on storage.objects
-  for delete to authenticated using (
+create policy "Owners can access their project photo files" on storage.objects
+  for all to authenticated using (
     bucket_id = 'project-photos' and public.can_access_project_photo(name)
   );
