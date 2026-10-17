@@ -125,39 +125,45 @@ values ('project-photos', 'project-photos', false, 12582912, array['image/jpeg',
 on conflict (id) do update set public = false, file_size_limit = 12582912,
   allowed_mime_types = array['image/jpeg','image/png','image/webp'];
 
+-- Keep the ownership lookup in a helper so the Storage policy can reference
+-- the outer storage.objects.name without colliding with projects.name or businesses.name.
+create or replace function public.can_access_project_photo(object_path text)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $function$
+  select exists (
+    select 1
+    from public.projects as p
+    join public.businesses as b on b.id = p.business_id
+    where p.id::text = split_part(object_path, '/', 1)
+      and b.owner_id = (select auth.uid())
+  );
+$function$;
+
+revoke all on function public.can_access_project_photo(text) from public, anon, authenticated;
+grant execute on function public.can_access_project_photo(text) to authenticated;
+
 create policy "Owners can view their project photo files" on storage.objects
   for select to authenticated using (
-    bucket_id = 'project-photos' and exists (
-      select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
-    )
+    bucket_id = 'project-photos' and public.can_access_project_photo(name)
   );
 
 create policy "Owners can upload their project photo files" on storage.objects
   for insert to authenticated with check (
-    bucket_id = 'project-photos' and exists (
-      select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
-    )
+    bucket_id = 'project-photos' and public.can_access_project_photo(name)
   );
 
 create policy "Owners can update their project photo files" on storage.objects
   for update to authenticated using (
-    bucket_id = 'project-photos' and exists (
-      select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
-    )
+    bucket_id = 'project-photos' and public.can_access_project_photo(name)
   ) with check (
-    bucket_id = 'project-photos' and exists (
-      select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
-    )
+    bucket_id = 'project-photos' and public.can_access_project_photo(name)
   );
 
 create policy "Owners can delete their project photo files" on storage.objects
   for delete to authenticated using (
-    bucket_id = 'project-photos' and exists (
-      select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
-    )
+    bucket_id = 'project-photos' and public.can_access_project_photo(name)
   );
