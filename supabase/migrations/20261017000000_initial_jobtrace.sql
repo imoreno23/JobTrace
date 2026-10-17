@@ -129,7 +129,7 @@ create policy "Owners can view their project photo files" on storage.objects
   for select to authenticated using (
     bucket_id = 'project-photos' and exists (
       select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(name))[1] and b.owner_id = (select auth.uid())
+      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
     )
   );
 
@@ -137,7 +137,7 @@ create policy "Owners can upload their project photo files" on storage.objects
   for insert to authenticated with check (
     bucket_id = 'project-photos' and exists (
       select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(name))[1] and b.owner_id = (select auth.uid())
+      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
     )
   );
 
@@ -145,12 +145,12 @@ create policy "Owners can update their project photo files" on storage.objects
   for update to authenticated using (
     bucket_id = 'project-photos' and exists (
       select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(name))[1] and b.owner_id = (select auth.uid())
+      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
     )
   ) with check (
     bucket_id = 'project-photos' and exists (
       select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(name))[1] and b.owner_id = (select auth.uid())
+      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
     )
   );
 
@@ -158,6 +158,6 @@ create policy "Owners can delete their project photo files" on storage.objects
   for delete to authenticated using (
     bucket_id = 'project-photos' and exists (
       select 1 from public.projects p join public.businesses b on b.id = p.business_id
-      where p.id::text = (storage.foldername(name))[1] and b.owner_id = (select auth.uid())
+      where p.id::text = (storage.foldername(storage.objects.name))[1] and b.owner_id = (select auth.uid())
     )
   );
