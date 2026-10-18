@@ -178,3 +178,4 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
 .account-project-summary .account-detail-status{display:block;justify-self:start}
 .account-project-summary .account-detail-status select{width:max-content;min-width:116px;min-height:32px;padding:6px 27px 6px 11px;font-size:10px;line-height:1.2}
 @media(max-width:760px){.account-project-summary .account-detail-status select{max-width:100%}}
+@media(max-width:760px){.account-project-summary{grid-template-columns:minmax(0,1fr)}.account-project-summary>span{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:38px}.account-project-summary .account-detail-status{margin-left:auto}.account-project-summary .account-detail-status select{width:140px;max-width:48vw}}
