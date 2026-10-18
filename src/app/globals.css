@@ -121,3 +121,45 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
 @media(max-width:420px){.account-page-heading{align-items:flex-start;flex-direction:column}.account-page-toolbar{align-items:stretch}.account-filter-form{width:100%}.account-filter-form select{flex:1;max-width:none}.account-project-row{grid-template-columns:40px minmax(0,1fr) 24px;gap:7px}.account-project-thumb{width:40px;height:40px}.account-status-form{grid-column:2;grid-row:2}.account-row-menu{grid-column:3;grid-row:1}.workspace-photo-grid{grid-template-columns:1fr 1fr}.account-upload-form{grid-template-columns:1fr}.account-upload-form>*{grid-column:1}.account-detail-actions .account-button{font-size:9px}}
 .account-project-list,.workspace-data-list{overflow:visible}.account-project-row,.workspace-data-row{position:relative}.account-project-row:has(.account-row-menu[open]),.workspace-data-row:has(.account-inline-edit[open]){z-index:5}.account-photo-tools{display:flex;align-items:center;gap:10px}.account-photo-tools .account-filter-form{margin:0}.account-photo-tools>.account-new-project>.account-upload-form{width:min(420px,calc(100vw - 32px))}.workspace-customer-main,.workspace-customer-jobs{min-width:0;display:grid;gap:4px}.workspace-customer-jobs>strong{color:var(--ink);font-size:10px}.workspace-customer-jobs>span{overflow:hidden;color:#89949a;font-size:9px;text-overflow:ellipsis;white-space:nowrap}.workspace-data-row .account-inline-edit>summary{font-size:10px}.workspace-photo-card form button{font-size:10px}.account-page-heading h1{overflow-wrap:anywhere}
 @media(max-width:760px){.account-photo-tools{align-items:flex-start;flex-direction:column}.account-photo-tools .account-new-project{align-self:flex-end}.workspace-data-row{grid-template-columns:34px minmax(0,1fr) auto;gap:9px;padding:10px}.workspace-data-row>span{grid-column:2}.workspace-customer-jobs{grid-column:2}.account-customer-actions{grid-column:3;grid-row:1 / span 2;flex-direction:column;align-items:flex-end;gap:7px}.account-inline-edit .account-editor-form{right:-4px}.account-project-row:has(.account-row-menu[open]),.workspace-data-row:has(.account-inline-edit[open]){z-index:10}}
+@media(max-width:760px){
+  .account-page-content{padding:22px 16px 40px}
+  .account-page-heading{align-items:flex-start;flex-direction:column;gap:11px;margin-bottom:20px}
+  .account-page-heading>.account-new-project{width:100%;max-width:none;align-self:stretch}
+  .account-page-heading>.account-new-project>summary{width:100%}
+  .account-page-toolbar{align-items:stretch;flex-direction:column;gap:9px;margin-bottom:20px}
+  .account-page-search{width:100%;min-width:0;height:42px}
+  .account-page-search button,.account-filter-form button{min-height:32px}
+  .account-filter-form{width:100%;gap:8px}
+  .account-filter-form select{height:40px;max-width:none;flex:1}
+  .account-detail-tabs{overflow-x:auto;white-space:nowrap;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .account-detail-tabs>a{flex:none;padding:12px 10px}
+  .account-detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .account-detail-actions>*{min-width:0}
+  .account-detail-actions .account-button{width:100%;min-height:40px;height:auto}
+  .account-project-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:13px}
+  .account-project-row{min-height:72px}
+  .account-status-form select{min-height:32px}
+  .account-upload-form{max-height:70svh;overflow:auto}
+  .workspace-photo-card>a{height:clamp(105px,34vw,150px)}
+  .account-comparison{grid-template-columns:1fr}
+  .account-comparison img{max-height:300px}
+  .account-quick-panel>div{display:flex;flex-wrap:wrap;gap:10px 16px}
+}
+@media(max-width:390px){
+  .account-topbar{padding-right:12px}
+  .account-breadcrumb{min-width:0;gap:6px;font-size:11px}
+  .account-breadcrumb>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .account-page-content{padding-left:12px;padding-right:12px}
+  .account-project-row{grid-template-columns:38px minmax(0,1fr) 24px;column-gap:8px}
+  .account-project-thumb{width:38px;height:38px}
+  .account-project-main>a{font-size:11px}
+  .account-status-form select{max-width:100%;font-size:9px}
+  .workspace-data-row{grid-template-columns:30px minmax(0,1fr) auto;column-gap:8px}
+  .workspace-data-avatar{width:30px;height:30px}
+  .account-customer-actions{gap:5px}
+  .account-customer-actions>a,.account-inline-edit>summary{font-size:9px}
+  .workspace-photo-grid{gap:8px}
+  .workspace-photo-card{padding:6px}
+  .workspace-photo-card>a{height:30vw;min-height:92px}
+  .account-button{min-height:38px}
+}
