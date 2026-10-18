@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { createProject, signOut } from "./actions";
+import { createProject } from "./actions";
+import AccountMenu from "./account-menu";
 import WorkspaceMenu from "./workspace-menu";
 
 type Project = {
@@ -55,6 +56,7 @@ export default async function HomePage({ searchParams }: Props) {
     const activeCount = ownProjects.filter(project => project.status === "In Progress").length;
     const completedCount = ownProjects.filter(project => project.status === "Completed").length;
     const email = typeof data.claims.email === "string" ? data.claims.email : "JobTrace user";
+    const workspaceName = business?.name ?? "My Business";
     const query = params.q?.trim().toLowerCase() ?? "";
     const visibleProjects = ownProjects.filter(project => !query || `${project.name} ${project.type} ${project.property_address} ${customerById.get(project.customer_id ?? "")?.name ?? ""}`.toLowerCase().includes(query));
 
@@ -63,14 +65,11 @@ export default async function HomePage({ searchParams }: Props) {
       <main className="account-main-area">
         <header className="account-topbar">
           <div className="account-breadcrumb"><span>Workspace</span><span className="account-crumb-slash">/</span><strong>Home</strong></div>
-          <div className="account-topbar-actions">
-            <form className="account-global-search" action="/"><span aria-hidden="true">⌕</span><input name="q" type="search" defaultValue={params.q ?? ""} placeholder="Search projects, customers..." aria-label="Search projects and customers" /><button type="submit" aria-label="Search">↵</button></form>
-            <form action={signOut}><button className="account-signout" type="submit">Sign out</button></form>
-            <div className="account-top-avatar" aria-label={email}>{email.slice(0, 1).toUpperCase()}</div>
-          </div>
+          <AccountMenu email={email} workspaceName={workspaceName} />
         </header>
         <div className="account-page-content" id="workspace-home">
-          <section className="account-page-heading"><div><span className="account-eyebrow">{business?.name ?? "YOUR WORKSPACE"}</span><h1>Good work starts with a clear record.</h1><p>Here’s what’s happening across your projects today.</p></div><details className="account-new-project"><summary className="account-button account-button-primary">New project <span aria-hidden="true">＋</span></summary><ProjectForm /></details></section>
+          <section className="account-page-heading"><div><span className="account-eyebrow">{workspaceName}</span><h1>Good work starts with a clear record.</h1><p>Here’s what’s happening across your projects today.</p></div></section>
+          <div className="account-page-toolbar"><form className="account-page-search" action="/"><span aria-hidden="true">⌕</span><input name="q" type="search" defaultValue={params.q ?? ""} placeholder="Search projects, customers..." aria-label="Search projects and customers" /><button type="submit">Search</button></form><details className="account-new-project"><summary className="account-button account-button-primary">New project <span aria-hidden="true">＋</span></summary><ProjectForm /></details></div>
           {params.error === "workspace" && <div className="account-notice" role="alert">We couldn’t find your workspace. Please sign out and sign in again, or contact support.</div>}
           {params.error === "project" && <div className="account-notice" role="alert">We couldn’t create that project. Please try again.</div>}
           {params.created === "project" && <div className="account-notice" role="status">Project created. You can add customer details and photos as you go.</div>}
