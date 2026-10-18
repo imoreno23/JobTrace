@@ -71,7 +71,7 @@ function ProjectRow({ project, customer }: { project: Project; customer?: Custom
     <div className="account-project-thumb" aria-hidden="true"><span>⌂</span></div>
     <div className="account-project-main"><Link href={`/?view=detail&project=${project.id}`}>{project.name}</Link><span>{project.type} · {project.property_address || "Address not added"}</span></div>
     <div className="account-project-customer">{customer?.name ?? "No customer"}</div>
-    <ProjectStatusSelect id={project.id} status={project.status} />
+    <ProjectStatusSelect id={project.id} status={project.status} showLabel />
     <details className="account-row-menu"><summary aria-label={`Project options for ${project.name}`}>···</summary><div><Link href={`/?view=detail&project=${project.id}`}>Open details &amp; edit</Link><form action={setProjectArchived}><input type="hidden" name="id" value={project.id} /><input type="hidden" name="archived" value={String(!project.archived)} /><button>{project.archived ? "Restore project" : "Archive project"}</button></form></div></details>
   </article>;
 }
