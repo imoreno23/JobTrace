@@ -18,3 +18,47 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
 .notice{margin:22px 0;padding:13px 15px;border:1px solid #dce7dc;border-radius:10px;background:#f2f7f1;color:#465a48;font-size:13px;line-height:1.55}.notice code{overflow-wrap:anywhere}.notice.error{border-color:#efd4cb;background:#fff5f1;color:#934928}
 .auth-panel .brand{margin-bottom:34px}.auth-form{display:grid;gap:16px;margin-top:24px}.auth-form label{display:grid;gap:7px;font-size:13px;font-weight:600}.auth-form input{width:100%;height:46px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:#fff;font:inherit;outline-color:var(--accent)}.auth-form .button{width:100%;margin-top:2px}.signup{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:13px}.signup summary{cursor:pointer;font-weight:600}.signup-form{margin-top:16px}
 @media(max-width:480px){.screen{padding:16px;align-items:center}.panel{border-radius:16px}.brand{margin-bottom:36px}}
+
+.workspace-screen{min-height:100svh;background:var(--paper)}
+.workspace-topbar{height:72px;padding:0 clamp(20px,5vw,72px);display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--line)}
+.workspace-topbar .brand{margin:0;color:var(--ink)}
+.workspace-account{display:flex;align-items:center;gap:18px;color:var(--muted);font-size:13px}
+.workspace-account form{margin:0}
+.workspace-account button{border:0;background:none;color:var(--ink);font:600 13px 'DM Sans',sans-serif;cursor:pointer}
+.workspace-content{width:min(100% - 40px,1120px);margin:0 auto;padding:52px 0 80px}
+.workspace-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px}
+.workspace-heading .eyebrow,.workspace-section-heading .eyebrow,.workspace-empty .eyebrow{margin:0 0 10px}
+.workspace-heading h1{font-size:clamp(28px,4vw,38px);margin-bottom:8px}
+.workspace-heading>div>p:last-child{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.workspace-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
+.workspace-stats article{min-height:108px;padding:18px 20px;background:var(--white);border:1px solid var(--line);border-radius:13px;display:flex;flex-direction:column;justify-content:space-between}
+.workspace-stats article span{font-size:12px;color:var(--muted)}
+.workspace-stats article strong{font:700 28px/1 'Manrope',sans-serif;letter-spacing:-1px}
+.workspace-empty{max-width:720px;margin:0 auto;padding:clamp(26px,6vw,52px);background:var(--white);border:1px solid var(--line);border-radius:18px;text-align:center;box-shadow:0 18px 48px #3542390c}
+.empty-mark,.project-mark{display:grid;place-items:center;background:var(--sage);color:var(--ink);font-size:22px}
+.empty-mark{width:48px;height:48px;margin:0 auto 20px;border-radius:14px}
+.workspace-empty h2,.workspace-section-heading h2{margin:0 0 10px;font:700 24px/1.2 'Manrope',sans-serif;letter-spacing:-.7px}
+.workspace-empty>p:not(.eyebrow){max-width:490px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.7}
+.project-create-form{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(180px,1fr);gap:12px;margin-top:26px;text-align:left}
+.project-create-form label{display:grid;gap:7px;font-size:12px;font-weight:600;color:var(--ink)}
+.project-create-form input,.project-create-form select{width:100%;height:46px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font:400 14px 'DM Sans',sans-serif;outline-color:var(--accent)}
+.project-create-form .button{grid-column:1/-1;width:100%;margin:2px 0 0}
+.workspace-projects{padding:26px;background:var(--white);border:1px solid var(--line);border-radius:14px}
+.workspace-section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.workspace-section-heading h2{margin:0}
+.new-project-details{position:relative}
+.new-project-details>summary{list-style:none;cursor:pointer;padding:10px 14px;border-radius:9px;background:var(--ink);color:white;font-size:13px;font-weight:700;white-space:nowrap}
+.new-project-details>summary::-webkit-details-marker{display:none}
+.new-project-details[open]{position:relative;z-index:2}
+.new-project-details .project-create-form{position:absolute;right:0;top:calc(100% + 10px);width:min(520px,calc(100vw - 40px));padding:18px;background:var(--white);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 48px #35423920}
+.workspace-project-list{display:grid;gap:8px}
+.workspace-project{display:flex;align-items:center;gap:13px;padding:13px 14px;border:1px solid var(--line);border-radius:11px}
+.project-mark{width:38px;height:38px;flex:none;border-radius:10px}
+.workspace-project-copy{min-width:0;flex:1}
+.workspace-project-copy h3{margin:0 0 4px;font-size:14px;font-weight:700}
+.workspace-project-copy p{margin:0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.workspace-status{padding:6px 9px;border-radius:20px;background:#f3eee0;color:#88682d;font-size:11px;font-weight:700;white-space:nowrap}
+.workspace-status.status-in-progress{background:#e8eee6;color:#47634a}
+.workspace-status.status-completed{background:#e9eff1;color:#31566b}
+@media(max-width:700px){.workspace-content{width:min(100% - 32px,1120px);padding:34px 0 56px}.workspace-topbar{height:64px;padding:0 16px}.workspace-account{gap:10px;font-size:11px}.workspace-account button{font-size:12px}.workspace-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.workspace-stats article{min-height:90px;padding:14px}.workspace-stats article strong{font-size:25px}.workspace-empty{padding:28px 20px}.project-create-form{grid-template-columns:1fr}.project-create-form .button{grid-column:1}.workspace-projects{padding:17px}.workspace-project{padding:11px 10px;gap:9px}.workspace-status{font-size:10px;padding:5px 7px}}
+@media(max-width:390px){.workspace-account>span{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.workspace-section-heading{align-items:flex-start}.workspace-section-heading h2{font-size:21px}.workspace-project-copy h3{font-size:12px}.workspace-project-copy p{font-size:10px}}
