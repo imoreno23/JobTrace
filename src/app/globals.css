@@ -163,3 +163,15 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
   .workspace-photo-card>a{height:30vw;min-height:92px}
   .account-button{min-height:38px}
 }
+
+/* Photo previews stay in the current workspace page. */
+.photo-lightbox-trigger{position:relative;width:100%;height:150px;padding:0;display:block;overflow:hidden;border:0;border-radius:6px;background:#edf1f2;text-align:left;cursor:zoom-in}
+.photo-lightbox-trigger img{width:100%;height:100%;object-fit:cover}
+.photo-lightbox-trigger>span{position:absolute;top:7px;left:7px;padding:4px 7px;border-radius:12px;background:#fff;color:var(--ink);font-size:9px}
+.photo-lightbox-comparison{height:auto;max-height:360px;background:transparent}
+.photo-lightbox-comparison img{width:100%;max-height:360px;object-fit:cover;border-radius:6px}
+.photo-lightbox-backdrop{position:fixed;inset:0;z-index:1000;padding:20px;display:grid;place-items:center;background:#111a;backdrop-filter:blur(3px)}
+.photo-lightbox-dialog{position:relative;width:min(1100px,96vw);height:min(92svh,900px);display:grid;place-items:center}
+.photo-lightbox-dialog>img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:0 12px 50px #0008}
+.photo-lightbox-close{position:absolute;top:8px;right:8px;z-index:1;width:42px;height:42px;border:1px solid #ffffff66;border-radius:50%;background:#17231ddd;color:#fff;font-size:30px;line-height:1;cursor:pointer}
+@media(max-width:760px){.workspace-photo-card>.photo-lightbox-trigger{height:125px}.photo-lightbox-backdrop{padding:12px}.photo-lightbox-dialog{width:100%;height:88svh}.photo-lightbox-close{top:0;right:0;width:46px;height:46px}}
