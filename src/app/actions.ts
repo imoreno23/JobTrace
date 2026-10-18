@@ -126,17 +126,20 @@ export async function uploadProjectPhotos(formData: FormData) {
   const category = String(formData.get("category") ?? "During");
   const caption = String(formData.get("caption") ?? "").trim();
   const returnView = String(formData.get("return_view") ?? "detail");
-  const files = formData.getAll("photos").filter((value): value is File => value instanceof File && value.size > 0);
+  const files = formData.getAll("photos").filter((value): value is File => typeof value !== "string" && value.size > 0);
   if (!projectId || !files.length || !["Before", "During", "After", "Issue", "Other"].includes(category)) redirect(`/?view=detail&project=${projectId}&error=photo`);
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]);
   let saved = 0;
+  let failure: "type" | "size" | "storage" | "record" | null = null;
   for (const file of files) {
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 12 * 1024 * 1024) continue;
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    if (!allowedTypes.has(file.type)) { failure ??= "type"; continue; }
+    if (file.size > 12 * 1024 * 1024) { failure ??= "size"; continue; }
+    const extension = file.name.split(".").pop()?.toLowerCase() || (file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : file.type === "image/heic" ? "heic" : file.type === "image/heif" ? "heif" : "jpg");
     const path = `${projectId}/${crypto.randomUUID()}.${extension}`;
     const { error: uploadError } = await supabase.storage.from("project-photos").upload(path, file, { contentType: file.type, upsert: false });
-    if (uploadError) continue;
+    if (uploadError) { console.error("Project photo storage upload failed:", uploadError.message); failure ??= "storage"; continue; }
     const { error: rowError } = await supabase.from("project_photos").insert({ business_id: business.id, project_id: projectId, object_path: path, category, caption: caption || file.name.replace(/\.[^.]+$/, ""), taken_at: String(formData.get("taken_at") ?? "") || null });
-    if (rowError) await supabase.storage.from("project-photos").remove([path]);
+    if (rowError) { console.error("Project photo record insert failed:", rowError.message); await supabase.storage.from("project-photos").remove([path]); failure ??= "record"; }
     else saved++;
   }
   if (saved) {
@@ -144,7 +147,8 @@ export async function uploadProjectPhotos(formData: FormData) {
     await logWorkspaceActivity(supabase, business.id, `Added ${saved} photo${saved === 1 ? "" : "s"} to ${project?.name ?? "a project"}.`);
   }
   revalidatePath("/");
-  redirect(returnView === "photos" ? `/?view=photos${saved ? "&uploaded=" + saved : "&error=photo"}` : `/?view=detail&project=${projectId}&tab=photos${saved ? "&uploaded=" + saved : "&error=photo"}`);
+  const destination = returnView === "photos" ? "?view=photos" : `?view=detail&project=${projectId}&tab=photos`;
+  redirect(`/${destination}${saved ? "&uploaded=" + saved : ""}${failure ? "&error=photo&reason=" + failure : saved ? "" : "&error=photo"}`);
 }
 
 export async function deleteProjectPhoto(formData: FormData) {
