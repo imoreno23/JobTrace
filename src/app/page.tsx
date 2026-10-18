@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createProject, signOut } from "./actions";
+import WorkspaceMenu from "./workspace-menu";
 
 type Project = {
   id: string;
@@ -41,10 +42,11 @@ export default async function HomePage({ searchParams }: Props) {
 
     return <main className="workspace-screen">
       <header className="workspace-topbar">
+        <WorkspaceMenu />
         <Link className="brand" href="/">jobtrace<span>.</span></Link>
         <div className="workspace-account"><span>{greeting}</span><form action={signOut}><button type="submit">Sign out</button></form></div>
       </header>
-      <div className="workspace-content">
+      <div className="workspace-content" id="workspace-home">
         <section className="workspace-heading"><div><p className="eyebrow">{business?.name ?? "YOUR WORKSPACE"}</p><h1>Good work starts here.</h1><p>Your projects, customers, and job photos will live here.</p></div></section>
         {params.error === "workspace" && <div className="notice error" role="alert">We couldn’t find your workspace. Please sign out and sign in again, or contact support.</div>}
         {params.error === "project" && <div className="notice error" role="alert">We couldn’t create that project. Please try again.</div>}
@@ -55,12 +57,12 @@ export default async function HomePage({ searchParams }: Props) {
           <article><span>Customers</span><strong>{String(customerCount ?? 0).padStart(2, "0")}</strong></article>
           <article><span>Project photos</span><strong>{String(photoCount ?? 0).padStart(2, "0")}</strong></article>
         </section>
-        {ownProjects.length === 0 ? <section className="workspace-empty">
+        {ownProjects.length === 0 ? <section className="workspace-empty" id="workspace-projects">
           <div className="empty-mark" aria-hidden="true">⌂</div>
           <p className="eyebrow">A FRESH START</p><h2>Your first project starts here.</h2>
           <p>Create a project to keep its job details and photos together. This workspace is yours—there’s no sample data to clear out.</p>
           <ProjectForm />
-        </section> : <section className="workspace-projects">
+        </section> : <section className="workspace-projects" id="workspace-projects">
           <div className="workspace-section-heading"><div><p className="eyebrow">YOUR WORK</p><h2>Projects</h2></div><details className="new-project-details"><summary>＋ New project</summary><ProjectForm /></details></div>
           <div className="workspace-project-list">{ownProjects.map(project => <article className="workspace-project" key={project.id}>
             <div className="project-mark" aria-hidden="true">⌂</div><div className="workspace-project-copy"><h3>{project.name}</h3><p>{project.type}{project.property_address ? ` · ${project.property_address}` : ""}</p></div>

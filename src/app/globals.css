@@ -22,6 +22,17 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
 .workspace-screen{min-height:100svh;background:var(--paper)}
 .workspace-topbar{height:72px;padding:0 clamp(20px,5vw,72px);display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--line)}
 .workspace-topbar .brand{margin:0;color:var(--ink)}
+.workspace-menu-toggle{width:38px;height:38px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font:400 21px/1 'DM Sans',sans-serif;cursor:pointer}
+.workspace-menu-layer{position:fixed;inset:0;z-index:30}
+.workspace-menu-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:#17231d70;cursor:pointer}
+.workspace-menu-panel{position:absolute;inset:0 auto 0 0;width:min(290px,86vw);padding:24px 18px;background:var(--white);box-shadow:12px 0 40px #1a2c241f;display:flex;flex-direction:column;gap:7px}
+.workspace-menu-heading{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 20px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.workspace-menu-heading .eyebrow{margin:0}
+.workspace-menu-heading button{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);font-size:21px;line-height:1;cursor:pointer}
+.workspace-menu-panel>a{min-height:44px;display:flex;align-items:center;gap:12px;padding:0 11px;border-radius:9px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:600}
+.workspace-menu-panel>a:hover{background:var(--sage)}
+.workspace-menu-panel>a>span{width:20px;text-align:center;color:var(--accent);font-size:18px}
+.workspace-menu-panel .workspace-menu-demo{margin-top:auto;border-top:1px solid var(--line);border-radius:0;padding-top:15px;color:var(--muted);font-size:12px}
 .workspace-account{display:flex;align-items:center;gap:18px;color:var(--muted);font-size:13px}
 .workspace-account form{margin:0}
 .workspace-account button{border:0;background:none;color:var(--ink);font:600 13px 'DM Sans',sans-serif;cursor:pointer}
