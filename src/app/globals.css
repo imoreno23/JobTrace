@@ -180,5 +180,5 @@ h1{margin:0 0 14px;font:700 clamp(30px,7vw,38px)/1.14 'Manrope',sans-serif;lette
 .account-detail-actions .account-button{appearance:none;background:#fff;border:1px solid var(--line);color:var(--ink);font:700 12px 'DM Sans',sans-serif}
 .account-detail-actions .account-button:hover{background:var(--paper)}
 .account-project-row .account-status-label{display:none}
-@media(max-width:760px){.account-project-row .account-status-form{grid-column:2;grid-row:2;justify-self:start;display:grid;justify-items:start;gap:5px}.account-project-row .account-status-label{display:block;color:#89949a;font-size:10px;line-height:1.2}.account-project-row .account-status-form select{min-width:116px;min-height:34px}.account-project-row .account-row-menu{grid-column:4;grid-row:1}}
+@media(max-width:760px){.account-project-row .account-status-form{grid-column:1/-1;grid-row:2;justify-self:start;display:grid;justify-items:start;gap:5px}.account-project-row .account-status-label{display:block;color:#89949a;font-size:10px;line-height:1.2}.account-project-row .account-status-form select{min-width:116px;min-height:34px}.account-project-row .account-row-menu{grid-column:4;grid-row:1}}
 @media(max-width:420px){.account-project-row .account-row-menu{grid-column:3;grid-row:1}}
