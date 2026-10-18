@@ -14,8 +14,10 @@ type Project = {
   customer_id: string | null;
 };
 
-type Customer = { id: string; name: string };
-type Props = { searchParams: Promise<{ created?: string; error?: string; q?: string }> };
+type Customer = { id: string; name: string; email: string | null; phone: string | null; address: string | null };
+type Photo = { id: string; project_id: string; object_path: string; category: string; caption: string; created_at: string };
+type View = "home" | "projects" | "customers" | "photos";
+type Props = { searchParams: Promise<{ created?: string; error?: string; q?: string; view?: string }> };
 
 function ProjectForm() {
   return <form action={createProject} className="project-create-form">
@@ -47,9 +49,10 @@ export default async function HomePage({ searchParams }: Props) {
     const [{ data: business }, { data: projects }, { data: customers, count: customerCount }, { count: photoCount }] = await Promise.all([
       supabase.from("businesses").select("id, name").maybeSingle(),
       supabase.from("projects").select("id, name, type, status, property_address, created_at, customer_id").eq("archived", false).order("created_at", { ascending: false }),
-      supabase.from("customers").select("id, name", { count: "exact" }),
+      supabase.from("customers").select("id, name, email, phone, address", { count: "exact" }).order("name"),
       supabase.from("project_photos").select("id", { count: "exact", head: true }),
     ]);
+    const { data: photos } = await supabase.from("project_photos").select("id, project_id, object_path, category, caption, created_at").order("created_at", { ascending: false });
     const ownProjects = (projects ?? []) as Project[];
     const ownCustomers = (customers ?? []) as Customer[];
     const customerById = new Map(ownCustomers.map(customer => [customer.id, customer]));
@@ -57,17 +60,29 @@ export default async function HomePage({ searchParams }: Props) {
     const completedCount = ownProjects.filter(project => project.status === "Completed").length;
     const email = typeof data.claims.email === "string" ? data.claims.email : "JobTrace user";
     const workspaceName = business?.name ?? "My Business";
+    const view: View = params.view === "projects" || params.view === "customers" || params.view === "photos" ? params.view : "home";
     const query = params.q?.trim().toLowerCase() ?? "";
     const visibleProjects = ownProjects.filter(project => !query || `${project.name} ${project.type} ${project.property_address} ${customerById.get(project.customer_id ?? "")?.name ?? ""}`.toLowerCase().includes(query));
+    const ownPhotos = (photos ?? []) as Photo[];
+    const visibleCustomers = ownCustomers.filter(customer => !query || `${customer.name} ${customer.email ?? ""} ${customer.phone ?? ""} ${customer.address ?? ""}`.toLowerCase().includes(query));
+    const visiblePhotos = ownPhotos.filter(photo => !query || `${photo.caption} ${photo.category} ${photo.object_path} ${ownProjects.find(project => project.id === photo.project_id)?.name ?? ""}`.toLowerCase().includes(query));
+    const pageTitle = view === "home" ? "Home" : view === "projects" ? "Projects" : view === "customers" ? "Customers" : "Photo library";
 
     return <div className="account-app-shell">
-      <WorkspaceMenu email={email} projectCount={ownProjects.length} />
+      <WorkspaceMenu email={email} projectCount={ownProjects.length} view={view} />
       <main className="account-main-area">
         <header className="account-topbar">
-          <div className="account-breadcrumb"><span>Workspace</span><span className="account-crumb-slash">/</span><strong>Home</strong></div>
+          <div className="account-breadcrumb"><span>Workspace</span><span className="account-crumb-slash">/</span><strong>{pageTitle}</strong></div>
           <AccountMenu email={email} workspaceName={workspaceName} />
         </header>
         <div className="account-page-content" id="workspace-home">
+          {view !== "home" ? <>
+            <section className="account-page-heading"><div><span className="account-eyebrow">{workspaceName}</span><h1>{pageTitle}</h1><p>{view === "projects" ? "All of your active and completed jobs in one place." : view === "customers" ? "The people and contact details connected to your work." : "Photos saved across your projects."}</p></div></section>
+            <div className="account-page-toolbar"><form className="account-page-search" action="/"><input type="hidden" name="view" value={view} /><span aria-hidden="true">⌕</span><input name="q" type="search" defaultValue={params.q ?? ""} placeholder={`Search ${view === "photos" ? "photos" : view}...`} aria-label={`Search ${pageTitle.toLowerCase()}`} /><button type="submit">Search</button></form>{view === "projects" && <details className="account-new-project"><summary className="account-button account-button-primary">New project <span aria-hidden="true">＋</span></summary><ProjectForm /></details>}</div>
+            {view === "projects" && <section className="account-recent-projects"><div className="account-section-heading"><h2>{query ? "Matching projects" : "All projects"}</h2><span>{visibleProjects.length} projects</span></div><div className="account-project-list">{visibleProjects.map(project => <ProjectRow key={project.id} project={project} customer={customerById.get(project.customer_id ?? "")} />)}{visibleProjects.length === 0 && <div className="account-empty-projects"><strong>{ownProjects.length ? "No matching projects" : "No projects yet"}</strong><p>{ownProjects.length ? "Try another search." : "Create your first project to start tracking your work."}</p></div>}</div></section>}
+            {view === "customers" && <section className="account-recent-projects"><div className="account-section-heading"><h2>{query ? "Matching customers" : "All customers"}</h2><span>{visibleCustomers.length} customers</span></div><div className="workspace-data-list">{visibleCustomers.map(customer => <article className="workspace-data-row" key={customer.id}><div className="workspace-data-avatar" aria-hidden="true">{customer.name.slice(0, 1).toUpperCase()}</div><div><strong>{customer.name}</strong><span>{customer.email || customer.phone || "No contact details"}</span></div><span>{customer.address || "Address not added"}</span></article>)}{visibleCustomers.length === 0 && <div className="account-empty-projects"><strong>{ownCustomers.length ? "No matching customers" : "No customers yet"}</strong><p>Customer details will appear here when added to a project.</p></div>}</div></section>}
+            {view === "photos" && <section className="account-recent-projects"><div className="account-section-heading"><h2>{query ? "Matching photos" : "Recent photos"}</h2><span>{visiblePhotos.length} photos</span></div><div className="workspace-data-list">{visiblePhotos.map(photo => <article className="workspace-data-row" key={photo.id}><div className="workspace-photo-placeholder" aria-hidden="true">▧</div><div><strong>{photo.caption || photo.category}</strong><span>{ownProjects.find(project => project.id === photo.project_id)?.name ?? "Project"}</span></div><span>{photo.category}</span></article>)}{visiblePhotos.length === 0 && <div className="account-empty-projects"><strong>{ownPhotos.length ? "No matching photos" : "No photos yet"}</strong><p>Photos added to your projects will appear here.</p></div>}</div></section>}
+          </> : <>
           <section className="account-page-heading"><div><span className="account-eyebrow">{workspaceName}</span><h1>Good work starts with a clear record.</h1><p>Here’s what’s happening across your projects today.</p></div></section>
           <div className="account-page-toolbar"><form className="account-page-search" action="/"><span aria-hidden="true">⌕</span><input name="q" type="search" defaultValue={params.q ?? ""} placeholder="Search projects, customers..." aria-label="Search projects and customers" /><button type="submit">Search</button></form><details className="account-new-project"><summary className="account-button account-button-primary">New project <span aria-hidden="true">＋</span></summary><ProjectForm /></details></div>
           {params.error === "workspace" && <div className="account-notice" role="alert">We couldn’t find your workspace. Please sign out and sign in again, or contact support.</div>}
@@ -89,6 +104,7 @@ export default async function HomePage({ searchParams }: Props) {
               {ownProjects.length ? ownProjects.slice(0, 4).map(project => <div className="account-activity-item" key={project.id}><span className="account-activity-icon" aria-hidden="true">↗</span><div><strong>{project.name}</strong><p>Project · {project.status}</p><time>{new Date(project.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</time></div></div>) : <div className="account-activity-empty"><span aria-hidden="true">✳</span><p>Your project updates will appear here.</p></div>}
             </section><section className="account-quick-panel"><strong>Capture the details while they’re fresh.</strong><p>Keep a clear record of every job, from the first photo to the final walkthrough.</p><div><a href="#project-list">Projects <span>→</span></a><a href="#customers-summary">Customers <span>→</span></a></div></section></aside>
           </div>
+          </>}
         </div>
       </main>
     </div>;
